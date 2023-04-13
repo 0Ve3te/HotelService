@@ -1,0 +1,99 @@
+﻿@model List<Hotel>
+
+@{
+    ViewData["Title"] = "Hotele";
+}
+
+<div class="input-group mb-3">
+    <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+    <input id="findHotel" type="text" class="form-control" placeholder="Podaj kraj, region, miasto lub nazwę hotelu..." aria-label="Nazwa przepisu">
+</div>
+
+<div class="container row">
+    <p>
+        <a asp-action="Create" class="btn btn-warning">Dodaj własny hotel</a>
+    </p>
+    @foreach (Hotel hotel in Model)
+    {
+        <div class="card col-12 mb-3 mx-2 hotelCard" style="max-width: 600px;" id="@hotel.Id">
+            <div class="row g-0">
+                <div class="col-md-5 p-2">
+                    @*<img src='@hotel.mainImgSrc' style="height:100%; max-height:200px;" class="img img-fluid rounded" alt="...">*@
+                    <img src='/Hotels/@hotel.FolderName/Index.jpg' style="height:100%; max-height:200px;" class="img img-fluid rounded" alt="...">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <a asp-action="Details" asp-route-id="@hotel.Id" class="text-decoration-none"><h3 class="card-title">@hotel.Name</h3></a>
+                        <h5 class="small">@hotel.Country, @hotel.City</h5>
+                        <div class="card-text">
+                            @if (hotel.RoomLowestPrice != 0)
+                            {
+                                <p class="text-end">Ceny pokoi już od <span class="fw-bold">@hotel.RoomLowestPrice</span> zł</p>
+                            }
+                            else
+                            {
+                                <p class="text-end"><span class="fw-bold">Brak informacji o cenach</span></p>
+                            }
+                            @if (hotel.AvgReviews != 0)
+                            {
+                                <p class="text-end">Średnia ocen <span class="fw-bold text-warning">@hotel.AvgReviews / 10 <i class="fas fa-star"></i></span></p>
+                            }
+                            <hr>
+                            @foreach (Feature feature in hotel.FeatureList)
+                            {
+                                <span class="badge rounded-pill bg-success"> <i class="@feature.Icon mr-1"></i> @feature.Name</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+
+@section Scripts {
+    <script>
+        const allHotels = document.querySelectorAll('.hotelCard');
+
+        $(document).ready(function() {
+            $("#findHotel").keyup(function() {
+                var text = $("#findHotel").val();
+                if (text.length == 0) return showAllHotels();
+
+                $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("FindHotel")",
+                    data: { term: text },
+                    success: function(msg) {
+                        showData(msg);
+                    },
+                    error: function(req, status, error) {
+                        console.error(error);
+                    }
+                })
+
+            });
+        });
+
+        function showData(msg) {
+            for (const cardHotel of allHotels) { 
+                for (const hotel of msg) { 
+                    if (cardHotel.id == hotel.id) {
+                        cardHotel.style = "display: flex; max-width: 600px;";
+                        break;
+                    } else {
+                        cardHotel.style = "display: none";
+                    }
+                };
+            };
+        };
+
+        function showAllHotels() {
+            for (const cardHotel of allHotels) {
+                cardHotel.style = "display: flex; max-width: 600px;";
+            }
+        }
+
+    </script>
+}

@@ -1,0 +1,76 @@
+﻿@model HotelService.Models.Reservation
+
+@{
+}
+
+<div class="container bg-light px-5 border border-1 p-5">
+    <h1>Zmiana statusu rezerwacji</h1>
+    <hr />
+    <h3 class="fw-light">Aktualny status rezerwacji, to: <span class="fw-bold">@Model.Status</span>.</h3>
+   <form asp-action="ChangeStatus">
+    <select asp-for="Status" class="my-3 form-select">
+        <option value="Potwierdzono">Potwierdzono</option>
+        <option class="text-danger" value="Anulowano">Anulowano</option>
+        <option value="W trakcie realizacji">W trakcie realizacji</option>
+    </select>
+    <input type="submit" value="Aktualizuj status" class="btn btn-primary" />
+   </form>
+    <h5 class="fw-light my-3"><i class="far fa-question-circle px-1 text-primary"></i>Wybierz inny status i zatwierdź zmiany. Klient zostatnie poinformowany o aktualizacji statusu w prywatnej wiadmości email.</h5>
+
+    <form class="row" enctype="multipart/form-data">
+    <h3>Dane klienta</h3>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="DateStart" class="control-label"></label>
+                <input asp-for="DateStart" class="form-control" disabled />
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="DateEnd" class="control-label"></label>
+                <input asp-for="DateEnd" class="form-control" disabled />
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="HotelName" class="control-label"></label>
+                <input asp-for="HotelName" class="form-control" disabled />
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="RoomName" class="control-label"></label>
+                <input asp-for="RoomName" class="form-control disabled" disabled />
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" disabled />
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" disabled />
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" disabled />
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" disabled />
+            </div>
+        </div>
+        <div class="col-12 mt-4">
+            <div class="form-group">
+                <a class="btn btn-secondary" asp-controller="Hotels" asp-action="Manage">Wróć do zarządzania hotelami</a>
+            </div>
+        </div>
+    </form>
+</div>

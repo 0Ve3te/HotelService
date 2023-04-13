@@ -1,0 +1,257 @@
+﻿@model HotelService.Models.Reservation
+
+@{
+    ViewData["Title"] = "Create";
+}
+<div class="container bg-light px-5 border border-1">
+    <h1>Rezerwacja pokoju</h1>
+    <hr />
+    <form asp-action="Create" class="p-3 row">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="DateStart" class="control-label"></label>
+                <div class="input-group">
+                    <input asp-for="DateStart" type="text" class="form-control datepicker" asp-format="{0:dd/MM/yyyy}">
+                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                </div>
+                <span asp-validation-for="DateStart" class="text-danger"></span>
+                <span class="text-danger">@Html.ValidationMessage("IncorrectDateStart")</span>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="DateEnd" class="control-label"></label>
+                 <div class="input-group">
+                    <input asp-for="DateEnd" type="text" class="form-control datepickerEnd">
+                    <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                 </div>
+                <span asp-validation-for="DateEnd" class="text-danger"></span>
+                <span class="text-danger">@Html.ValidationMessage("IncorrectDateEnd")</span>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">+48</span>
+                  </div>
+                <input asp-for="PhoneNumber" class="form-control" placeholder="123456789" />
+                <button id="SendCode" class="btn btn-primary" type="button">Wyślij kod aktywacyjny</button>
+               </div>
+                <span class="text-muted small d-block"> <i class="fas fa-info-circle"></i> Na podany numer telefonu zostanie wysłany kod weryfikacyjny.</span>
+                <span id="PhoneNumberError" asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" value="@User.Identity.Name" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 my-2">
+            <div class="form-group">
+               <label class="control-label" for="Code">Kod zwrotny</label>
+               <input asp-for="CodeSMS" id="Code" class="form-control" placeholder="Otrzymany 6 cyfrowy kod">
+               <span asp-validation-for="CodeSMS" class="text-danger"></span>
+               <span class="text-danger">@Html.ValidationMessage("IncorrectVerificationCode")</span>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 my-2">
+            <div class="form-group">
+                <label asp-for="RoomId" class="control-label"></label>
+                <select asp-for="RoomId" class="form-control" required>
+                    @foreach (var room in ViewBag.hotelRooms)
+                    {
+                        @foreach (var price in ViewBag.RoomPrices)
+                        {
+                            if (price.Value == room.Value)
+                            {
+                                <option value="@room.Value" data-price="@price.Text">@room.Text</option>
+                            }
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+        <div class="col-12 mt-2">
+            <div>
+                <h2>Podsumowanie</h2>
+                <p>Hotel: @ViewBag.HotelName</p>
+                <p id="ChosenRoom">Wybrany pokój: </p>
+                <p id="ReservationDateCounter">Ilość dni: </p>
+                <p id="Price">Kwota do zapłaty: </p>
+            </div>
+        </div>
+        <div class="col-12 mt-2">
+            <div class="form-group">
+                <input type="submit" value="Zarezerwuj" class="btn btn-primary" />
+                <a class="btn btn-secondary" asp-controller="Hotels" asp-action="Details" asp-route-id="@ViewBag.HotelId">Wróć do podstrony hotelu</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <link rel="stylesheet" href="~/lib/bootstrap-datepicker/dist/bootstrap-datepicker.min.css" />
+    <script src="~/lib/bootstrap-datepicker/dist/bootstrap-datepicker.min.js"></script>
+    <script src="~/lib/bootstrap-datepicker/dist/bootstrap-datepicker.pl.min.js"></script>
+
+    <script>
+        let dates = [];
+
+        //Get unavailable start days
+        function getUnavailableDays()
+        {
+            const roomId = document.getElementById("RoomId").value;
+
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetUnavailableDays")",
+                data: { roomId: roomId },
+                success: function(result) {
+                    if (result) {
+
+                        result.forEach((element, index) => {
+                            result[index] = element.split('.').reverse().join('.');
+                        })
+
+                        console.log(result);
+                        $('.datepicker').datepicker('setDatesDisabled', result);
+                    }
+                }
+            });
+        }
+
+        //Get end day
+        function getEndDay()
+        {
+            const roomId = document.getElementById("RoomId").value;
+            const startDay = document.getElementById("DateStart").value;
+            
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("GetEndDay")",
+                data: { roomId: roomId, startDay: startDay },
+                success: function(result) {
+                    if (result) {
+                        result = result.split('.').reverse().join('.');
+                        $('.datepickerEnd').datepicker('setStartDate', startDay);
+                        $('.datepickerEnd').datepicker('setEndDate', result);
+                    } else {
+                        var now = new Date();
+                        current = new Date(now.getFullYear(), now.getMonth()+12, 1);
+                        $('.datepickerEnd').datepicker('setStartDate', startDay);
+                        $('.datepickerEnd').datepicker('setEndDate', current);
+                    }
+                }
+            });
+        }
+
+        getUnavailableDays();
+
+        const getRoomPrice = () => {
+            let price = 0;
+            let room;
+            const selectedValue = document.querySelector('select').value
+            const allOptions = document.querySelectorAll('option');
+
+            allOptions.forEach(function(e) {
+                if (e.value == selectedValue) {
+                    price = e.dataset.price;
+                    room = e.text;
+                }
+            });
+
+            let startDate = document.getElementById('DateStart').value;
+            let [day, month, year] = startDate.split('.');
+            let result = [year, month, day].join('-');
+            startDate = result;
+
+            let endDate = document.getElementById('DateEnd').value;
+            [day, month, year] = endDate.split('.');
+            result = [year, month, day].join('-');
+            endDate = result;
+
+            const total = Date.parse(endDate) - Date.parse(startDate);
+            let days = Math.floor(total / (1000 * 60 * 60 * 24))+1;
+
+            if (isNaN(days)) {
+                days = 0;    
+            }
+            
+            document.getElementById("ChosenRoom").innerHTML = "Wybrany pokój: " + room;
+            document.getElementById("ReservationDateCounter").innerHTML = "Ilość dni: " + days;
+            document.getElementById("Price").innerHTML = "Kwota do zapłaty: " + price * days + " zł";
+        }
+
+        $('.datepicker').datepicker({
+            todayBtn: "linked",
+            language: "pl",
+            autoclose: true,
+            todayHighlight: true,
+            format: "dd.mm.yyyy",
+            startDate: new Date()
+        }).on('changeDate', () => { getEndDay(); getRoomPrice(); }); 
+
+        $('.datepickerEnd').datepicker({
+            language: "pl",
+            autoclose: true,
+            format: "dd.mm.yyyy",
+            startDate: new Date(),
+            endDate: new Date(),
+        }).on('changeDate', getRoomPrice); 
+
+
+        //Verification
+        const sendButton = document.querySelector('#SendCode');
+        let number = 0;
+
+        $(sendButton).click(function () {
+            number = document.querySelector('#PhoneNumber').value;
+            
+            if (number.length < 9 || number.length > 9)
+                return 0;
+            else
+                number = "+48" + number;
+
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("SendSMS")",
+                data: {number: number},
+                success: function(msg) {
+                    console.log(msg);
+                },
+                error: function(req, status, error) {
+                    console.error(error);
+                }
+            })
+        });
+
+        $('#RoomId').on('change', function() {
+            document.getElementById('DateStart').value = "";
+            document.getElementById('DateEnd').value = "";
+            getUnavailableDays();
+            getRoomPrice();
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

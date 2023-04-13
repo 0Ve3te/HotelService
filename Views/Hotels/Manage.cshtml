@@ -1,0 +1,35 @@
+﻿@model IEnumerable<HotelService.Models.Hotel>
+
+@{
+    ViewData["Title"] = "Zarządzanie";
+}
+
+<h1>Twoje hotele</h1>
+
+@if (Model.Count() > 0) {
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 row-cols-xxl-4">
+        @foreach (Hotel hotel in Model)
+        {
+            <div class="col my-3 recipeCard" id="@hotel.Id">
+                <a asp-action="Details" asp-route-id="@hotel.Id" class="text-decoration-none">
+                    <div class="card h-100">
+                        <img src='/Hotels/@hotel.FolderName/Index.jpg' class="d-flex card-img-top responsive-img" height="180" />
+                        <div class="card-body">
+                            <h5 class="card-title text-center">@hotel.Name</h5>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><a asp-controller="Rooms" asp-action="Index" asp-route-id="@hotel.Id" class="btn btn-primary d-block">Zarządzaj pokojami</a></li>
+                                <li class="list-group-item"><a asp-controller="Hotels" asp-action="Edit" asp-route-id="@hotel.Id" class="btn btn-secondary d-block">Edytuj hotel</a></li>
+                                <li class="list-group-item"><a asp-controller="Reservations" asp-action="Hotel" asp-route-id="@hotel.Id" class="btn btn-warning d-block">Historia rezerwacji</a></li>
+                                <li class="list-group-item"><a asp-controller="Hotels" asp-action="Delete" asp-route-id="@hotel.Id" class="btn btn-danger d-block">Usuń hotel</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+} else {
+    <div class="alert alert-warning" role="alert">
+        Nie dodano jeszcze żadnego hotelu, aby dodać swój obiekt wypoczynkowy kliknij <a class="fw-bold" asp-action="Create">tutaj</a>.
+    </div>
+}

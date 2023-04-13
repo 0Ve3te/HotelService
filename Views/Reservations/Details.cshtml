@@ -1,0 +1,88 @@
+﻿@model HotelService.Models.Reservation
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+<div class="container bg-light px-5 border border-1 p-5">
+    <h1>Szczegółowe informacje dotyczące rezerwacji</h1>
+    <hr />
+    <h3 class="fw-light">Aktualny status tej rezerwacji, to: <span class="fw-bold">@Model.Status</span>.</h3>
+    <form class="row" enctype="multipart/form-data">
+    <h4 class="fw-normal">Dane klienta podane podczas rezerwacji</h4>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="DateStart" class="control-label"></label>
+                <input asp-for="DateStart" class="form-control" disabled />
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="DateEnd" class="control-label"></label>
+                <input asp-for="DateEnd" class="form-control" disabled />
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="HotelName" class="control-label"></label>
+                <input asp-for="HotelName" class="form-control" disabled />
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="RoomName" class="control-label"></label>
+                <input asp-for="RoomName" class="form-control disabled" disabled />
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" disabled />
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" disabled />
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="PhoneNumber" class="control-label"></label>
+                <input asp-for="PhoneNumber" class="form-control" disabled />
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" disabled />
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <div class="input-group">
+                    <input asp-for="Price" class="form-control" disabled />
+                    <div class="input-group-append">
+                        <span class="input-group-text" id="basic-addon2">zł</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if(Model.IsRated == false)
+        {
+            <p class="mt-2 fs-5"> <i class="fas fa-exclamation-circle text-warning"></i> Ta rezerwacja nie została jeszcze przez Ciebie oceniona.</p>
+            <a asp-controller="Hotels" asp-action="Details" asp-route-id="@Model.HotelId"><i class="fas fa-trophy text-warning"></i> Przejdź na stronę hotelu i dodaj opinię <i class="fas fa-trophy text-warning"></i></a>
+        }
+        else
+        {
+            <p class="mt-2 fs-5"> <i class="far fa-check-circle text-success"></i> Ta rezerwacja została już przez Ciebie oceniona.</p>
+        }
+        <div class="col-12 mt-4">
+            <div class="form-group">
+                <a class="btn btn-secondary" asp-controller="Reservations" asp-action="Index">Wróć do historii rezerwacji</a>
+            </div>
+        </div>
+    </form>
+</div>

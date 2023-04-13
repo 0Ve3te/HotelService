@@ -1,0 +1,95 @@
+﻿@model HotelService.Models.Review
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div class="container bg-light px-5 border border-1">
+    <h1 class="p-2">Dodawanie opinii</h1>
+    <hr />
+    @if (ViewBag.Info == "Error")
+    {
+        <h4 class="text-secondary">Nie możesz dodać opinii, ponieważ nie znaleziono rezerwacji powiązanej z Twoim profilem w tym hotelu lub żadna rezerwacja nie została jeszcze zakończona.</h4>
+        <h5 class="text-secondary">* Wszystkie dokonane rezerwacje będzie można ocenić dopiero po dacie ich zakończenia.</h5>
+        <a class="btn btn-primary my-2" asp-action="Details" asp-controller="Hotels" asp-route-id="@ViewData["HotelId"]">Wróć do hotelu</a>
+    }
+    else
+    {
+        <form asp-action="Create" class="p-3 row">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="col-12">
+                <label asp-for="ReservationId" class="control-label">Wybierz pobyt, który chcesz ocenić.</label>
+                <select asp-for="ReservationId" class="form-control" asp-items="@ViewBag.Reservations" required></select>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                    <label asp-for="FirstName" class="control-label"></label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                    <label asp-for="LastName" class="control-label"></label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label asp-for="Title" class="control-label"></label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label asp-for="Rate" class="control-label"></label>
+                    <input asp-for="Rate" class="form-control" />
+                    <span asp-validation-for="Rate" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <textarea asp-for="Description" class="form-control"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                    <label asp-for="Pluses" class="control-label"></label>
+                    <textarea asp-for="Pluses" class="form-control"></textarea>
+                    <span asp-validation-for="Pluses" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-12 col-md-6">
+                <div class="form-group">
+                    <label asp-for="Minuses" class="control-label"></label>
+                    <textarea asp-for="Minuses" class="form-control"></textarea>
+                    <span asp-validation-for="Minuses" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-12 mt-3">
+                <div class="form-group">
+                    <input type="submit" value="Dodaj opinię" class="btn btn-primary" />
+                    <a class="btn btn-secondary" asp-action="Details" asp-controller="Hotels" asp-route-id="@ViewData["HotelId"]">Wróć do hotelu</a>
+                </div>
+            </div>
+        </form>
+    }
+</div>
+@section Scripts {
+    @{
+    <script src="https://cdn.tiny.cloud/1/xhqgakhggodairtclysnakgbf7do0ikutty8r5hm18befk1a/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            toolbar: 'Undo | Redo | bold | Italic',
+            menubar: false
+        });
+    </script>
+
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

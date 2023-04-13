@@ -1,0 +1,49 @@
+html {
+    font-size: 14px;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+}
+
+.form-floating {
+    margin: 15px 0;
+}
+
+.map-responsive {
+    overflow: hidden;
+    padding-bottom: 56.25%;
+    position: relative;
+    height: 0;
+}
+
+.map-responsive iframe {
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+.backgroundBlack {
+    background-color: rgba(0,0,0,0.4);
+    border-radius: 4px;
+}
+
+/* date picker */
+
+.datepicker td, th {
+    text-align: center;
+    padding: 5px 8px;
+    font-size: 14px;
+}

@@ -1,0 +1,32 @@
+﻿@model IEnumerable<HotelService.Models.Room>
+
+@{
+    ViewData["Title"] = "Lista dostępnych pokoi";
+}
+
+<div class="container">
+    <h1>Pokoje dostępne w Twoim hotelu</h1>
+    <p>
+        <a asp-action="Create" asp-route-idHotel="@Model.First().HotelId" class="btn btn-success"><i class="fas fa-plus-circle mx-1"></i> Dodaj pokój</a>
+    </p>
+    <hr />
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@item.Name</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Maksymalna ilośc osób: @item.People</h6>
+                        <p class="card-text">@Html.Raw(@item.Description)</p>
+                        <h7 class="card-subtitle mb-2 text-muted">Ilość pokojów w hotelu: @item.CountOfRooms</h7>
+                        <div class="card-footer">Cena za noc: @item.Price zł</div>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edytuj</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Usuń</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

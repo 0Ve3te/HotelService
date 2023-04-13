@@ -1,0 +1,87 @@
+﻿@model HotelService.Models.Review
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<div class="container bg-light px-5 border border-1">
+    <h1>Edytowanie opinii</h1>
+    <hr />
+
+    <form asp-action="Edit" class="p-3 row">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="Date" />
+        <input type="hidden" asp-for="HotelId" />
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="FirstName" class="control-label"></label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="LastName" class="control-label"></label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-group">
+                <label asp-for="Rate" class="control-label"></label>
+                <input asp-for="Rate" class="form-control" />
+                <span asp-validation-for="Rate" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="Pluses" class="control-label"></label>
+                <textarea asp-for="Pluses" class="form-control"></textarea>
+                <span asp-validation-for="Pluses" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <label asp-for="Minuses" class="control-label"></label>
+                <textarea asp-for="Minuses" class="form-control"></textarea>
+                <span asp-validation-for="Minuses" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12 mt-3">
+            <div class="form-group">
+                <input type="submit" value="Zapisz zmiany" class="btn btn-success" />
+                <a class="btn btn-secondary" asp-action="Details" asp-controller="Hotels" asp-route-id="@ViewData["HotelId"]">Wróć do hotelu</a>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+@section Scripts {
+    @{
+    <script src="https://cdn.tiny.cloud/1/xhqgakhggodairtclysnakgbf7do0ikutty8r5hm18befk1a/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            toolbar: 'Undo | Redo | bold | Italic',
+            menubar: false
+        });
+    </script>
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }

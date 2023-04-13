@@ -1,0 +1,149 @@
+﻿@model IEnumerable<HotelService.Models.Reservation>
+
+@{
+    ViewData["Title"] = "Twoje rezerwacje";
+}
+
+<h1>Historia Twoich rezerwacji</h1>
+<div class="form-switch">
+    <input class="form-check-input" type="checkbox" role="switch" id="onlyActiveReservation">
+    <label for="onlyActiveReservation">Pokaż tylko aktualne rezerwacje</label>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Status
+            </th>
+            <th>
+                Od
+            </th>
+            <th>
+                Do
+            </th>
+            <th>
+                Hotel
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                Oceniono pobyt
+            </th>
+            <th>
+                Więcej informacji
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr id="@item.Id" class="tBody">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateStart)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateEnd)
+                </td>
+                <td>
+                    @item.HotelName
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price) zł
+                </td>
+                <td>
+                    @if (item.IsRated == true)
+                    {
+                        <span>Tak</span>
+                    }
+                    else
+                    {
+                        <span>Nie</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Pokaż szczegóły</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        let checked = false;
+        const reservations = document.querySelectorAll('.tBody');
+
+        $(document).ready(function() {
+            $("#onlyActiveReservation").change(function() {
+                checked = !checked;
+
+                if (checked == true) {
+                    $.ajax({
+                        type: "GET",
+                        url: "@Url.Action("GetUserReservations")",
+                        success: function(msg) {
+                            showData(msg);
+                        },
+                        error: function(req, status, error) {
+                            console.error(error);
+                        }
+                    })
+                }
+                else {
+                    $.ajax({
+                        type: "GET",
+                        success: function() {
+                            showAllData();
+                        },
+                        error: function(req, status, error) {
+                            console.error(error);
+                        }
+                    })
+                }
+            });
+        });
+
+        function showData(msg) {
+            console.log(reservations);
+            console.log(msg);
+
+            if (msg.length == 0) {
+                for (const reservation of reservations) {
+                    reservation.style = "display: none";
+                }
+            } else {
+                for (const reservation of reservations) {
+                    for (const data of msg) {
+                        if (reservation.id == data.id) {
+                            reservation.style = "display: table-row;";
+                            break;
+                        } else {
+                            reservation.style = "display: none";
+                        }
+                    };
+                };
+            }
+
+            
+
+            if (msg.length == 0) {
+                for (const reservation of reservations) {
+                    reservation.style = "display: none";
+                }
+            }
+
+        };
+
+        function showAllData() {
+            for (const reservation of reservations) {
+                reservation.style = 'display: table-row';
+            }
+        }
+    </script>
+}

@@ -1,0 +1,84 @@
+﻿@model HotelService.Models.Room
+
+@{
+    ViewData["Title"] = "Edycja pokoju";
+}
+
+<div class="container bg-light px-5 border border-1">
+    <h1>Edytuj pokój</h1>
+    <hr />
+
+    <form asp-action="Edit" class="p-3 row" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="@Model.Id" />
+        <input type="hidden" asp-for="@Model.HotelId" />
+
+        <div class="col-12">
+            <div class="form-group">
+                <label asp-for="@Model.Name" class="control-label"></label>
+                <input asp-for="@Model.Name" class="form-control" />
+                <span asp-validation-for="@Model.Name" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-group">
+                <label asp-for="@Model.Description" class="control-label"></label>
+                <textarea asp-for="@Model.Description" class="form-control"></textarea>
+                <span asp-validation-for="@Model.Description" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="form-group">
+                <label asp-for="@Model.Price" class="control-label"></label>
+                <input asp-for="@Model.Price" class="form-control" />
+                <span asp-validation-for="@Model.Price" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="form-group">
+                <label asp-for="@Model.People" class="control-label"></label>
+                <input asp-for="@Model.People" class="form-control" />
+                <span asp-validation-for="@Model.People" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12 col-md-4">
+            <div class="form-group">
+                <label asp-for="@Model.CountOfRooms" class="control-label"></label>
+                <input asp-for="@Model.CountOfRooms" class="form-control" />
+                <span asp-validation-for="@Model.CountOfRooms" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="form-group">
+                <label asp-for="RoomPhoto" class="control-label"></label>
+                <input asp-for="RoomPhoto" class="form-control" />
+                <span asp-validation-for="RoomPhoto" class="text-danger"></span>
+                <span class="text-danger">@Html.ValidationMessage("IncorrectExtensionError")</span>
+            </div>
+        </div>
+        <div class="col-12 mt-2">
+            <div class="form-group">
+                <input type="submit" value="Zapisz zmiany" class="btn btn-primary" />
+            </div>
+        </div>
+        <div class="col-12 mt-2">
+            <div class="form-group">
+                <a class="btn btn-secondary" asp-action="Manage" asp-controller="Hotels">Wróć do listy Twoich hoteli</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.tiny.cloud/1/xhqgakhggodairtclysnakgbf7do0ikutty8r5hm18befk1a/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea',
+            plugins: 'advlist autolink lists link image charmap preview anchor pagebreak',
+            toolbar_mode: 'floating',
+        });
+    </script>
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    }
